@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes - My Vegan Food Blog</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main>
+        <h1>Our Recipes</h1>
+        <% recipes.forEach(recipe => { %>
+            <div class="container">
+                <div class="img" style="background-image: url('<%= recipe.image %>');"></div>
+                <div class="content-container">
+                    <h2><%= recipe.title %></h2>
+                    <p><%= recipe.content.substring(0, 150) %>...</p>
+                    <a href="/recipe/<%= recipe.id %>" class="main-btn">View Recipe</a>
+                </div>
+            </div>
+        <% }); %>
+    </main>
+</body>
+</html>
+
