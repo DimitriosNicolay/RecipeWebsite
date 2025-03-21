@@ -57,6 +57,10 @@ app.get('/recipe/:id', (req, res) => {
     });
 });
 
+app.post('/api/likes', (req,res)=>{
+    const {recipe} = req.body;
+})
+
 app.listen(4000, () => {
     console.log(`Server running on localhost:4000`);
 });
