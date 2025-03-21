@@ -14,8 +14,14 @@
             <p><%= recipe.content %></p>
             
             <div class="likes-section">
-                <p>Likes: <%= recipe.likes || 0 %></p>
-                <p>Dislikes: <%= recipe.dislikes || 0 %></p>
+
+            <button id="likeButton" class="reaction-button like-button" onclick="updateLikes(true)">
+            <span class="icon like-icon"></span> Like (<span id="likeCount">0</span>)
+            </button>
+            <button id="dislikeButton" class="reaction-button dislike-button" onclick="updateLikes(false)">
+            <span class="icon dislike-icon"></span> Dislike (<span id="dislikeCount">0</span>)
+            </button>
+
             </div>
 
             <h2>Comments</h2>
@@ -33,5 +39,6 @@
             <% } %>
         </div>
     </main>
+    <script src="/../../js/likeButton.js"></script>
 </body>
 </html>
