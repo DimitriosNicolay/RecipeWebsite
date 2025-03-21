@@ -9,31 +9,80 @@
 <body>
     <main>
         <div class="recipe-detail">
-            <h1><%= recipe.title %></h1>
-            <img src="<%= recipe.image %>" alt="<%= recipe.title %>">
-            <p><%= recipe.content %></p>           
-
-            <div class="likes-section">
-                <button id="likeButton" class="reaction-button like-button">
-                <span class="icon like-icon"></span> Like (<span id="likeCount"><%= recipe.likes || 0 %></span>)</button>
-                <button id="dislikeButton" class="reaction-button dislike-button">
-                <span class="icon dislike-icon"></span> Dislike (<span id="dislikeCount"><%= recipe.dislikes || 0 %></span>)
-                </button>
+            <div class="recipe-card">
+                <img src="<%= recipe.image %>" class="recipe-image" alt="<%= recipe.title %>">
+                <div class="recipe-title-overlay">
+                    <%= recipe.title %>
+                </div>
+                <div class="reaction-container">
+                    <div class="reaction-buttons-row">
+                        <button id="likeButton" class="reaction-button like-button">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span class="count" id="likeCount"><%= recipe.likes || 0 %></span>
+                        </button>
+                        <button id="dislikeButton" class="reaction-button dislike-button">
+                            <i class="fas fa-thumbs-down"></i>
+                            <span class="count" id="dislikeCount"><%= recipe.dislikes || 0 %></span>
+                        </button>
+                    </div>
+                    <!-- Ratio Bar -->
+                    <div class="ratio-container">
+                        <div class="ratio-bar">
+                            <div class="ratio-fill" style="width: <%= ratio %>%"></div>
+                        </div>
+                        <div class="ratio-percentage"><%= ratio %>% Positive</div>
+                    </div>
+                </div>
             </div>
-
-            <h2>Comments</h2>
-                <% if (comments.length === 0) { %>
-                <p>No comments yet. Be the first to comment!</p>
-                <% } else { %>
-                    <ul class="comments-list">
-                    <% comments.forEach(comment => { %>
-                        <li>
-                            <p><%= comment.comment %></p>
-                            <small>Posted on: <%= comment.created_at %></small>
-                        </li>
-                    <% }); %>
+            <div class="recipe-content">
+                <div class="ingredients-list">
+                    <h3>Ingredients</h3>
+                    <ul>
+                        <% if (recipe.ingredients) { %>
+                            <% recipe.ingredients.split(',').forEach(ingredient => { %>
+                                <li><%= ingredient.trim() %></li>
+                            <% }); %>
+                        <% } else { %>
+                            <li>No ingredients listed</li>
+                        <% } %>
+                    </ul>
+                </div>
+                <div class="instructions">
+                    <h2>Cooking Instructions</h2>
+                    <ol>
+                        <% if (recipe.instructions) { %>
+                            <% recipe.instructions.split('\n').forEach(instruction => { %>
+                                <li><%= instruction %></li>
+                            <% }); %>
+                        <% } else { %>
+                            <li>No instructions provided</li>
+                        <% } %>
+                    </ol>
+                </div>
+            </div>
+            <div class="comments-section">
+                <h3>Comments</h3>
+                <ul class="comments-list">
+                    <% if (comments.length > 0) { %>
+                        <% comments.forEach(comment => { %>
+                            <li>
+                                <p><%= comment.comment %></p>
+                                <small>Posted on <%= new Date(comment.created_at).toLocaleDateString() %></small>
+                            </li>
+                        <% }); %>
+                    <% } else { %>
+                        <li>No comments yet. Be the first to comment!</li>
+                    <% } %>
                 </ul>
-            <% } %>
+                <div class="form-container">
+                    <h2>Add a Comment</h2>
+                    <form id="newCommentForm" action="/recipe/<%= recipe.id %>/comments" method="POST">
+                        <label for="comment">Comment:</label>
+                        <textarea id="comment" name="comment" required></textarea>
+                        <button type="submit" class="main-btn">Submit</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </main>
     <script src="/js/likeButton.js"></script>

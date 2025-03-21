@@ -3,14 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to My Vegan Food Blog</title>
+    <title>Welcome - My Vegan Food Blog</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <main>
         <div class="welcome-banner">
             <h1>Welcome to My Vegan Food Blog</h1>
-            <p>Discover delicious plant-based recipes and culinary inspiration!</p>
+            <p>Discover delicious vegan recipes and share your own creations with our community.</p>
+            <a href="/recipes" class="main-btn">Explore Recipes</a>
+        </div>
+        <div class="home-content">
+            <section class="text-section">
+                <h2>About Our Blog</h2>
+                <p>"At My Vegan Food Blog, we are passionate about plant-based living. Our mission is to provide you with the best vegan recipes, tips, and inspiration to help you lead a healthy and compassionate lifestyle."</p>
+                <p>"Whether you're a seasoned vegan or just starting out, we have something for everyone."</p>
+            </section>
+            <section class="recipe-of-the-month">
+                <h2>Recipe of the Month</h2>
+                <% if (recipe) { %>
+                    <div class="recipe-card">
+                        <img src="<%= recipe.image %>" class="recipe-image" alt="<%= recipe.title %>">
+                        <div class="recipe-title-overlay">
+                            <%= recipe.title %>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <p>No recipe available</p>
+                <% } %>
+            </section>
         </div>
     </main>
 </body>

@@ -5,6 +5,7 @@ import db from './lib/database.js';
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 app.set('views', './views');
@@ -12,7 +13,15 @@ app.set('layout', 'layout');
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.render('pages/index', { title: 'Home' });
+    db.query('SELECT * FROM recipes ORDER BY created_at DESC LIMIT 1', (err, results) => {
+        if (err) {
+            console.error('Error fetching recipe of the month:', err);
+            res.status(500).send('Error fetching recipe of the month');
+            return;
+        }
+        const recipeOfTheMonth = results[0];
+        res.render('pages/index', { title: 'Home', recipe: recipeOfTheMonth });
+    });
 });
 
 app.get('/about', (req, res) => {
@@ -34,7 +43,7 @@ app.get('/recipes', (req, res) => {
         ORDER BY ratio DESC
     `, (err, results) => {
         if (err) {
-            console.error('SQL Error:', err.sqlMessage); // Add this line
+            console.error('SQL Error:', err.sqlMessage);
             console.error('Full Error:', err);
             res.status(500).send('Error fetching recipes');
             return;
@@ -56,6 +65,16 @@ app.get('/recipe/:id', (req, res) => {
             return;
         }
 
+        const recipe = result[0];
+
+        const likes = parseInt(recipe.likes) || 0;
+        const dislikes = parseInt(recipe.dislikes) || 0;
+        const total = likes + dislikes;
+        const ratio = total > 0 ? Math.round((likes / total) * 100) : 0;
+
+        if (!recipe.instructions) recipe.instructions = "No instructions available";
+        if (!recipe.ingredients) recipe.ingredients = "No ingredients listed";
+
         db.query('SELECT * FROM comments WHERE recipe_id = ? ORDER BY created_at DESC', [recipeId], (err, commentsResult) => {
             if (err) {
                 res.status(500).send('Error fetching comments');
@@ -63,22 +82,58 @@ app.get('/recipe/:id', (req, res) => {
             }
 
             res.render('pages/recipe', {
-                title: result[0].title,
-                recipe: result[0],
-                comments: commentsResult
+                title: recipe.title,
+                recipe: {
+                    ...recipe,
+                    likes: likes,
+                    dislikes: dislikes
+                },
+                comments: commentsResult,
+                ratio: ratio
             });
         });
     });
 });
 
+app.post('/recipe/:id/comments', (req, res) => {
+    const recipeId = req.params.id;
+    const { comment } = req.body;
+
+    db.query('INSERT INTO comments (recipe_id, comment) VALUES (?, ?)', [recipeId, comment], (err, result) => {
+        if (err) {
+            console.error('Error inserting new comment:', err);
+            res.status(500).send('Error inserting new comment');
+            return;
+        }
+        res.redirect(`/recipe/${recipeId}`);
+    });
+});
+
+app.get('/newRecipe', (req, res) => {
+    res.render('pages/newRecipe', { title: 'Create New Recipe' });
+});
+
+app.post('/recipes', (req, res) => {
+    const { title, image, content, ingredients, instructions } = req.body;
+
+    db.query('INSERT INTO recipes (title, image, content, ingredients, instructions) VALUES (?, ?, ?, ?, ?)',
+        [title, image, content, ingredients, instructions], (err, result) => {
+            if (err) {
+                console.error('Error inserting new recipe:', err);
+                res.status(500).send('Error inserting new recipe');
+                return;
+            }
+            res.redirect('/recipes');
+        });
+});
+
 app.post('/api/likes', (req, res) => {
-    const { recipeId, isLike } = req.body; // Changed from 'recipe' to 'recipeId'
+    const { recipeId, isLike } = req.body;
 
     if (!recipeId || typeof isLike !== 'boolean') {
         return res.status(400).send('Invalid request');
     }
 
-    // Update the SQL query to properly increment counts
     db.query(`
         INSERT INTO likes (recipe_id, likes, dislikes)
         VALUES (?, ?, ?)
@@ -87,8 +142,8 @@ app.post('/api/likes', (req, res) => {
             dislikes = dislikes + VALUES(dislikes)
     `, [
         recipeId,
-        isLike ? 1 : 0,  // Insert 1 in likes column if like
-        isLike ? 0 : 1   // Insert 1 in dislikes column if dislike
+        isLike ? 1 : 0,
+        isLike ? 0 : 1
     ], (err) => {
         if (err) {
             console.error('Update error:', err);
@@ -112,7 +167,21 @@ app.get('/api/recipes/:id/likes', (req, res) => {
     });
 });
 
+app.get('/search', (req, res) => {
+    const searchTerm = req.query.q;
+    if (!searchTerm) {
+        return res.status(400).send('Search term is required');
+    }
+
+    db.query('SELECT id, title, image FROM recipes WHERE title LIKE ?', [`%${searchTerm}%`], (err, results) => {
+        if (err) {
+            console.error('Error fetching search results:', err);
+            return res.status(500).send('Error fetching search results');
+        }
+        res.json(results);
+    });
+});
+
 app.listen(4000, () => {
     console.log(`Server running on localhost:4000`);
 });
-
