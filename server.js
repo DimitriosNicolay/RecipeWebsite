@@ -4,6 +4,7 @@ import db from './lib/database.js';
 
 const app = express();
 
+app.use(express.json());
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 app.set('views', './views');
@@ -19,9 +20,22 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/recipes', (req, res) => {
-    db.query('SELECT * FROM recipes', (err, results) => {
+    db.query(`
+        SELECT 
+            r.*, 
+            COALESCE(l.likes, 0) AS likes,
+            COALESCE(l.dislikes, 0) AS dislikes,
+            CASE 
+                WHEN (COALESCE(l.likes, 0) + COALESCE(l.dislikes, 0)) = 0 THEN 0
+                ELSE (CAST(COALESCE(l.likes, 0) AS DECIMAL) / (COALESCE(l.likes, 0) + COALESCE(l.dislikes, 0)) * 100)
+            END AS ratio
+        FROM recipes r
+        LEFT JOIN likes l ON r.id = l.recipe_id
+        ORDER BY ratio DESC
+    `, (err, results) => {
         if (err) {
-            console.error(err);
+            console.error('SQL Error:', err.sqlMessage); // Add this line
+            console.error('Full Error:', err);
             res.status(500).send('Error fetching recipes');
             return;
         }
@@ -57,9 +71,46 @@ app.get('/recipe/:id', (req, res) => {
     });
 });
 
-app.post('/api/likes', (req,res)=>{
-    const {recipe} = req.body;
-})
+app.post('/api/likes', (req, res) => {
+    const { recipeId, isLike } = req.body; // Changed from 'recipe' to 'recipeId'
+
+    if (!recipeId || typeof isLike !== 'boolean') {
+        return res.status(400).send('Invalid request');
+    }
+
+    // Update the SQL query to properly increment counts
+    db.query(`
+        INSERT INTO likes (recipe_id, likes, dislikes)
+        VALUES (?, ?, ?)
+        ON DUPLICATE KEY UPDATE 
+            likes = likes + VALUES(likes),
+            dislikes = dislikes + VALUES(dislikes)
+    `, [
+        recipeId,
+        isLike ? 1 : 0,  // Insert 1 in likes column if like
+        isLike ? 0 : 1   // Insert 1 in dislikes column if dislike
+    ], (err) => {
+        if (err) {
+            console.error('Update error:', err);
+            return res.status(500).send('Error updating likes');
+        }
+        res.sendStatus(200);
+    });
+});
+
+app.get('/api/recipes/:id/likes', (req, res) => {
+    const recipeId = req.params.id;
+    db.query('SELECT likes, dislikes FROM likes WHERE recipe_id = ?', [recipeId], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json({
+            likes: results[0]?.likes || 0,
+            dislikes: results[0]?.dislikes || 0
+        });
+    });
+});
 
 app.listen(4000, () => {
     console.log(`Server running on localhost:4000`);

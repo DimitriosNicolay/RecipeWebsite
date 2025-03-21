@@ -184,49 +184,50 @@ nav ul li a {
 .reaction-button {
     padding: 10px 20px;
     font-size: 16px;
-    border: none;
+    border: solid;
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
     margin: 0 10px;
     display: inline-flex;
     align-items: center;
-    color: white;
-  }
-  
-  .like-button {
+    color: rgb(255, 255, 255);
+    transition: transform 0.1s ease;
+}
+
+.like-button {
     background-color: #4CAF50;
-  }
-  
-  .dislike-button {
-    background-color: #f44336;
-  }
-  
-  .reaction-button:hover {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
-  
-  .reaction-button:active {
-    transform: scale(0.95);
-  }
-  
-  .icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-  
-  .like-icon {
-    background-image: url('/../images/like.png');
-  }
-  
-  .dislike-icon {
-    background-image: url('/../images/dislike.png');
-  }
+}
+
+.dislike-button {
+background-color: #f44336;
+}
+
+.reaction-button:hover {
+opacity: 0.8;
+transform: scale(1.05);
+}
+
+.reaction-button:active {
+transform: scale(0.95);
+}
+
+.icon {
+width: 20px;
+height: 20px;
+margin-right: 8px;
+background-size: contain;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+.like-icon {
+background-image: url('/../images/like.png');
+}
+
+.dislike-icon {
+background-image: url('/../images/dislike.png');
+}
 
 .comments-list {
     list-style-type: none;

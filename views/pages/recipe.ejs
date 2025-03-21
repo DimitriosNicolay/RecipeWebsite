@@ -11,24 +11,21 @@
         <div class="recipe-detail">
             <h1><%= recipe.title %></h1>
             <img src="<%= recipe.image %>" alt="<%= recipe.title %>">
-            <p><%= recipe.content %></p>
-            
+            <p><%= recipe.content %></p>           
+
             <div class="likes-section">
-
-            <button id="likeButton" class="reaction-button like-button" onclick="updateLikes(true)">
-            <span class="icon like-icon"></span> Like (<span id="likeCount">0</span>)
-            </button>
-            <button id="dislikeButton" class="reaction-button dislike-button" onclick="updateLikes(false)">
-            <span class="icon dislike-icon"></span> Dislike (<span id="dislikeCount">0</span>)
-            </button>
-
+                <button id="likeButton" class="reaction-button like-button">
+                <span class="icon like-icon"></span> Like (<span id="likeCount"><%= recipe.likes || 0 %></span>)</button>
+                <button id="dislikeButton" class="reaction-button dislike-button">
+                <span class="icon dislike-icon"></span> Dislike (<span id="dislikeCount"><%= recipe.dislikes || 0 %></span>)
+                </button>
             </div>
 
             <h2>Comments</h2>
-            <% if (comments.length === 0) { %>
+                <% if (comments.length === 0) { %>
                 <p>No comments yet. Be the first to comment!</p>
-            <% } else { %>
-                <ul class="comments-list">
+                <% } else { %>
+                    <ul class="comments-list">
                     <% comments.forEach(comment => { %>
                         <li>
                             <p><%= comment.comment %></p>
@@ -39,6 +36,6 @@
             <% } %>
         </div>
     </main>
-    <script src="/../../js/likeButton.js"></script>
+    <script src="/js/likeButton.js"></script>
 </body>
 </html>
