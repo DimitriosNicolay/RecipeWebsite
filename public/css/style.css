@@ -553,6 +553,29 @@ nav ul li a {
     padding: 0.5rem 0;
 }
 
+.impressum-section {
+    margin-bottom: 2rem;
+}
+
+.impressum-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.impressum-section ul {
+    padding-left: 1.5rem;
+    line-height: 1.8;
+}
+
+.impressum-section ul li {
+    padding: 0.5rem 0;
+}
+
+.impressum-section a {
+    color: #ff6e00;
+    text-decoration: none;
+}
+
 .search-results {
     position: absolute;
     top: 45px;
@@ -587,4 +610,45 @@ nav ul li a {
 
 .search-results .result-item:hover {
     background: #f0f0f0;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: #000;
+    color: #fff;
+    border-top: 1px solid #ddd;
+    margin-top: 2rem;
+    border-radius: 10px 10px 0 0;
+}
+
+footer p {
+    margin: 0.5rem 0;
+}
+
+footer a {
+    color: #ff6e00;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer .heart-icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    color: #ff6e00;
+    }
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main {
+    flex: 1;
 }

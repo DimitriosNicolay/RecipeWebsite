@@ -182,6 +182,10 @@ app.get('/search', (req, res) => {
     });
 });
 
+app.get('/impressum', (req, res) => {
+    res.render('pages/impressum', { title: 'Impressum' });
+});
+
 app.listen(4000, () => {
     console.log(`Server running on localhost:4000`);
 });
