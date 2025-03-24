@@ -229,11 +229,9 @@ nav ul li a {
 .text-section {
     margin-top: 16px;
     width: calc(100% - 16px);
-    padding-right: 0;
 }
 
 .recipe-of-the-month {
-    margin-top: 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -651,4 +649,13 @@ body {
 
 main {
     flex: 1;
+}
+
+.raven-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    float: right;
+    clear: right;
+    color: #ff6e00;
 }
