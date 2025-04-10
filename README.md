@@ -37,12 +37,12 @@ To run this project locally, follow these steps:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/BBQ-U27b/nicolay_recipe3.git
+    git clone https://github.com/DimitriosNicolay/RecipeWebsite.git
     ```
 
 2. Navigate to the project directory:
     ```bash
-    cd nicolay_recipe3
+    cd RecipeWebsite
     ```
 
 3. Install the dependencies:
