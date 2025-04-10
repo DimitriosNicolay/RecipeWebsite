@@ -1,6 +1,6 @@
 # My Recipe Blog
 
-Welcome to the Nicolay Recipe Blog! This project was created as part of a class assignment where we were tasked with creating a recipe website. The website is hosted at [dnicolay.de](http://dnicolay.de).
+Welcome to the Nicolay Recipe Blog! This project was created as part of a class assignment where we were tasked with creating a recipe website. The website was hosted at [dnicolay.de](http://dnicolay.de).
 
 ## Table of Contents
 
@@ -21,7 +21,6 @@ This is my Recipe Blog, which is a vegan food blog that provides delicious vegan
 - View detailed recipe pages with ingredients and instructions
 - Like and dislike recipes
 - Add comments to recipes
-- Responsive design for mobile and desktop
 
 ## Technologies Used
 
